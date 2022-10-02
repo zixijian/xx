@@ -1,0 +1,84 @@
+#nop 逍遥行数据;
+
+/*
+数据格式范例：
+#var Route_出发节点缩写_目标节点缩写 {
+  {cn}{出发节点中文全称;目标节点中文全称}
+  {long}{出发节点全拼;目标节点全拼}
+  {path}{路径}
+};
+
+注：出发和返回路径总是成对出现。
+
+*/
+
+#nop 南城客栈（kezhan）=> 礼品店（lipindian）;
+#var Route_kz_lpd {
+  {cn}{南城客栈;礼品店}
+  {long}{kezhan;lipindian}
+  {path}{w;n;ne}
+};
+
+#nop 礼品店（lipindian）=> 南城客栈（kezhan）;
+#var Route_lpd_kz {
+  {cn}{礼品店;南城客栈}
+  {long}{lipindian;kezhan}
+  {path}{sw;s;e}
+};
+
+#nop 南城客栈（kezhan）=> 十字街头（shizijietou）;
+#var Route_kz_szjt {
+  {cn}{南城客栈;十字街头}
+  {long}{kezhan;shizijietou}
+  {path}{w;n}
+};
+
+#nop 十字街头（shizijietou）=> 南城客栈（kezhan）;
+#var Route_szjt_kz {
+  {cn}{十字街头;南城客栈}
+  {long}{shizijietou;kezhan}
+  {path}{s;e}
+};
+
+#nop 十字街头（shizijietou）=> 月宫（yuegong）;
+#var Route_szjt_yg {
+  {cn}{十字街头;月宫}
+  {long}{shizijietou;yuegong}
+  {path}{w;w;w;w;w;w;w;nw;ne}
+};
+
+#nop 月宫（yuegong）=> 十字街头（shizijietou）;
+#var Route_yg_szjt {
+  {cn}{月宫;十字街头}
+  {long}{yuegong;shizijietou}
+  {path}{sw;se;e;e;e;e;e;e;e}
+};
+
+#var Route_szjt_ytg {
+  {cn}{十字街头;袁天罡}
+  {long}{shizijietou;yuantiangang}
+  {path}{n;w}
+};
+
+#var Route_ytg_szjt {
+  {cn}{袁天罡;十字街头};
+  {long}{yuantiangang;shizijietou}
+  {path}{e;s}
+};
+
+#nop 高老庄;
+#var ytg_glz {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;w;w;w;w;}
+#nop 普陀山;
+#var ytg_pts {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;}
+#nop 将军府;
+#var ytg_jjf {e;s;e;e;s;};
+#nop 红楼一梦;
+#var ytg_hlym {e;s;w;s;withdraw 220 coin;n;e;s;e;give 10 coin to er;buy pillow from boss;e;sleep;}
+#nop 方寸山;
+#var ytg_lg {e;s;#13 s;w;w;w;w;w;w;w;w;w;w;nw;}
+#nop 江州城;
+#var ytg_jz {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;w;}
+#nop 龙宫;
+#var ytg_lg {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;e;e;e;};
+#nop 开封城;
+#var ytg_kf {e;s;e;e;e;e;e;};

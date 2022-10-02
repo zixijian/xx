@@ -1,0 +1,239 @@
+#nop ==加载配置、连接信息==;
+
+#nop 加载配置;
+#read config.tt;
+
+#nop 指定编码;
+#config charset gbk;
+
+#nop 调色板;
+#read colorpad.tt;
+
+#nop 断线事件;
+#event {SESSION ACTIVATED} {
+	#if {"%0" == "gts"} {#read main.tt}
+};
+
+#nop 屏蔽连接提示;
+#event {GAG SESSION ACTIVATED} {#0};
+#event {GAG SESSION CONNECTED} {#0};
+#event {GAG SESSION CREATED} {#0};
+#event {GAG SESSION DEACTIVATED} {#0};
+#event {GAG SESSION DISCONNECTED} {#0};
+#event {GAG SESSION TIMED OUT} {#0};
+#event {CATCH IAC SB NAWS} {#0};
+#nop 启用会导致 mud 连接出现问题;
+#nop #event {CATCH SEND OUTPUT} {#0};
+
+#nop 指令 xyj 连接到西游记;
+#class tmpx open;
+#alias xyj {#class tmpx kill;#re xyj.tt};
+#class tmpx close;
+
+#nop screen 滑动，termux启用正常，juicessh异常;
+#alias slide {
+  #config mouse on;
+  #class slide open;
+  #event {SCROLLED MOUSE WHEEL UP} {#buffer up 1};
+  #event {SCROLLED MOUSE WHEEL DOWN} {#buffer down 2};
+  #class slide close;
+};
+#alias unslide {
+  #config mouse off;
+  #class slide kill;
+};
+
+#echo {%c%h} {light yellow};
+#echo {%c%h} {light green} {【请输入 xyj 指令连接至清华西游记】};
+#echo {%c%h} {light yellow};
+
+#nop 重载配置;
+#alias {rl} {
+  #kill;
+  #re main.tt;
+  #event {SCREEN RESIZE} {#split};
+  #gag {^$};
+  #gag {^>$}
+};
+
+#nop ==通知包装==;
+#nop 彩虹色;
+#function bc0 {
+  #local tmp @color_radom{%0};
+  #return $tmp;
+};
+#nop 绿色;
+#function bc1 {
+  #local tmp {<129>-->%0<--<099>};
+  #return $tmp;
+};
+#nop 青色;
+#function bc2 {
+  #local tmp {<169>...%0...<099>};
+  #return $tmp;
+};
+#nop 黄色;
+#function bc3 {
+  #local tmp {<139>***%0***<099>};
+  #return $tmp;
+};
+
+#nop ==命令回显==;
+#EVENT {SEND OUTPUT} {
+  #nop 剥离前后空字符;
+  #format {temp} {%p} {%0};
+  #if {"$temp" != ""} {
+    #nop 绿黄配色;
+    #echo {<129>-->CMD:[<139>$temp<129>]<--<099>};
+    #nop 彩虹色;
+    #nop #echo {@bc0{-->CMD:[$temp]<--}};
+  };
+};
+
+#nop ==自动返回原点==;
+#nop 手动行走 path_go;
+#alias {pg} {
+  #echo @bc2{开始记录路径，指令 pb 返回。};
+  #path new;
+  #class pgtmp open;
+  #act {^这个方向没有出路。$} {#path del};
+  #class pgtmp close;
+};
+#nop 路径自动行走 path_auto，路径必须带括号;
+#nop 示例：pa {w;e;s;bli;bla};
+#alias {pa} {
+  #echo @bc2{开始行走，指令 pb 返回原点。};
+  #path new;
+  #class pgtmp open;
+  #act {^这个方向没有出路。$} {#path del};
+  #class pgtmp close;
+  #local done {#echo {@bc2{行走完毕，指令 pb 返回原点。}}};
+  #local path_tmp %0;
+  #local path_tmp {$path_tmp;$done};
+  #path load $path_tmp;
+  #path run 0.5;
+}
+#nop 自动返回 path_back;
+#alias {pb} {
+  #echo @bc1{返回原点，指令 pg 记录新路径。};
+  #path save backward ptmp;
+  #local done {#echo {@bc2{行走完毕，已返回原点。}}};
+  #local path_tmp {$ptmp;$done};
+  #path load $path_tmp;
+  #path run 0.5;
+  #path end;
+  #class pgtmp kill;
+};
+
+#nop 慢速执行，必须带括号;
+#nop 示例：slowdo {w;w;s};
+#alias slowdo {
+  #path load %0;
+  #path run 1;
+};
+
+#nop ==新人领取福利==;
+#alias fuli {slowdo {$fuli}};
+#nop 从登录点客栈输入 fuli 指令开始;
+#var fuli {
+  w;
+  n;
+  ne;
+  ask wiz rjdwmbtq about gift;
+  #3 add cps;
+  sw;
+  w;
+  s;
+  withdraw 5 gold;
+  n;
+  e;
+  ne;
+  buy 200 chuansuo qi from shang ren;
+  buy newbie gift from shang ren;
+  sw;
+  s;
+  s;
+  e;
+  buy 200 dan from yang zhongshun;
+  buy 100 yao from yang zhongshun;
+  w;
+  n;
+  e;
+  #showme {@bc1{福利领取完毕};};
+};
+
+#nop 活动礼包;
+#nop 从登录点客栈输入 libao 指令开始;
+#alias libao {slowdo {$libao}};
+#var libao {
+  w;
+  n;
+  ne;
+  ask zhenren about gift;
+  sw;
+  s;
+  e;
+  #showme {@bc1{礼包领取完毕};};
+};
+
+#nop ==常用别名==;
+#nop 自杀;
+#alias {zisha} {suicide -f};
+#nop score;
+#alias {sc} {score};
+
+
+#nop ==自定函数==;
+#function {numitems} {#list %1 size result};
+#function {ismember} {#list %2 find {%1} result};
+#function {item} {#list %1 get %2 result};
+#nop 列表包装;
+#function {wrap} {#format result {%w} {%1}};
+#nop 普通字符串;
+#function {string} {#format result {%s} {%1}};
+#nop 数学运算;
+#function {eval} {#math result {%1}};
+#nop 小写文本;
+#function {lower} {#format result {%l} {%1}};
+#nop 取整数;
+#function {int} {#format result {%d} {%1}};
+#nop 大写文本;
+#function {upper} {#format result {%u} {%1}};
+#nop 大写第一个字母;
+#function {capital} {#format result {%n} {%1}};
+#nop 字符串长度;
+#function {len} {#format result {%L} {%1}};
+#nop  剥离前后空格;
+#function {trim} {#format result {%p} {%1}};
+#nop 屏幕宽度;
+#function {screenw} {#screen get rows result};
+#nop 屏幕高度;
+#function {screenh} {#screen get cols result};
+
+#nop 替换中文数字为阿拉伯数字;
+#function {replace} {#var result %1;#replace result {%2} {%3}};
+#function {ctd} {
+    #math result {@replace{@replace{{0+@replace{@replace{@replace{@replace{@replace{@replace{@replace{@replace{@replace{@replace{@replace{@replace{@replace{@replace{%1;{零};{*0+}};{十};{*10+}};{百};{*100+}};{千};{*1000+}};{万};{*10000+}};{六};{6}};{一};{1}};{二};{2}};{三};{3}};{四};{4}};{五};{5}};{七};{7}};{八};{8}};{九};{9}}+0};{++};{+}};{+*};{+}}}
+};
+
+#nop ==屏蔽屏幕提示==;
+#EVENT {SESSION CONNECTED}{
+  set openmap 1;
+  set brief 0;
+  #gag {^$};
+  #gag {^>$};
+};
+#gag {朵朵祥云忽然涌现在天际。};
+#gag {一朵云彩};
+#gag {再吹一声口哨};
+#gag {只见狂风大作};
+#gag {一{阵|股}{阴|狂}风};
+#gag {^->%!*说道%!*$};
+#gag {往%*离开};
+#gag {走了过来};
+#gag {专心地研读};
+#gag {卸除};
+#gag {放下};
+#gag {缓缓};
+#gag {戴上};
+#gag {穿上};

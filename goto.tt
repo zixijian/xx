@@ -1,0 +1,275 @@
+#nop 清华西游记逍遥行;
+
+/*  ====使用说明====
+
+指令 gt 走路
+指令 ft 飞行
+指令 sh 设定当前位置
+指令 wt 查看节点信息
+
+written by xgg 2022.10.1
+ver：1.0
+*/
+
+#class xiaoyao open;
+
+#nop 加载地图数据;
+#read goto_data.tt;
+
+#nop 加载房间定位;
+#read gps.tt;
+
+#nop 加载命令解析器;
+#read cmd.tt;
+
+#nop ====代码实现部分，勿随意修改====;
+
+#nop 解析地图数据生成关系列表;
+#var goto_route {};
+#nop &{[]}表示所有变量索引;
+#loop 1 &{[]} index {
+  #nop 匹配变量键名至目标格式字符串;
+  #regex {*{+$index}} {Route_%w_%w} 
+  {  
+    #nop #local node *{+$index};
+    #local path ${Route_&1_&2[path]};
+    #nop 节点缩写、中文名、全拼取值;
+    #local abbra &1;
+    #local abbrz &2;
+    #list long create ${Route_&1_&2[long]};
+    #list cn create ${Route_&1_&2[cn]};
+    #list path create ${path};
+    #local longa ${long[+1]};
+    #local cna ${cn[+1]};
+    #local longz ${long[+2]};
+    #local cnz ${cn[+2]};
+    #nop 生成关系列表;
+    #var goto_route[$abbra][cn] {${cna}};
+    #var goto_route[$abbra][long] {${longa}};
+    #var goto_route[$abbra][abbr] {${abbra}};
+    #var goto_route[$abbra][links][$abbrz] {
+       {cn}{${cnz}}
+       {long}{${longz}}
+       {abbr}{${abbrz}}
+       {path}{${path}}
+    };
+    #nop 统计连接节点数;
+    #local count {&{goto_route[$abbra][links][]}};
+    #var goto_route[$abbra][count] ${count};
+  };
+};
+#nop 建立缩写、中文、全拼查询表;
+#var gtlist_abbr {};
+#var gtlist_cn {};
+#var gtlist_long {};
+#foreach ${goto_route[%*]} node {
+  #local abbr ${node[abbr]};
+  #local cn ${node[cn]};
+  #local long ${node[long]};
+  #var gtlist_abbr {$gtlist_abbr{$abbr}{$cn}};
+  #var gtlist_cn {$gtlist_cn{$cn}{$abbr}};
+  #var gtlist_long {$gtlist_long{$long}{$abbr}};
+};
+
+#nop 设定当前位置;
+#alias sh {#var position %1};
+
+#alias gt {
+  #switch {"%1"} {
+    #case {""}     {goto_help};
+    #case {"here"} {goto_here};
+    #case {"list"} {goto_list};
+    #default {
+      #var destination %1;
+      #if {&{position}} {
+        goto_goto;
+      };
+      #else {
+        #echo {<171>找不到当前位置};
+      };
+    };
+  };
+};  
+#alias goto_help {
+  #echo {<129>%h} {【清华西游记逍遥行】};
+  #echo ;
+  #echo {  <129>命令格式：gt [Destination|here|list]};
+  #echo {    <139>gt Destination：前往指定区域，可使用全拼/缩写};
+  #echo {    <139>gt here：显示当前区域名称及地标房间};
+  #echo {    <139>gt list：显示所有可通行区域的名称};
+  #echo {    <139>gt：显示本说明};
+  #echo ;
+  #echo {  <169>wt：查看房间信息};
+  #echo {  <169>ft [地名全拼/缩写]：使用 fly 方式移动};
+  #echo {  <169>sh [地名缩写]：设定当前房间位置} ;
+  #echo ;
+  #echo {<129>%h} {【最后修改20221001】};
+};
+#alias goto_here {
+  #if {&{goto_route[$position][]}} {
+    #local here ${goto_route[$position]};
+    #local cn ${here[cn]};
+    #local long ${here[long]};
+    #local abbr ${here[abbr]};
+    #local num ${here[count]};
+    #echo {<139>当前位置：$cn（$long，$abbr）连接节点 $num 个};
+    #foreach ${here[links][%*]} {link} {
+      #echo {    ${link[cn]}（${link[long]}，${link[abbr]}）};
+    };
+  };
+  #else {
+    #echo {<171>到不到当前位置}
+  };
+};
+#alias goto_list {
+  #echo {<129>当前共有节点：&{goto_route[]} 个};
+  #loop 1 &{goto_route[]} cnt {
+    #local node ${goto_route[+$cnt]};
+    #local cn ${node[cn]};
+    #local long ${node[long]};
+    #local abbr ${node[abbr]};
+    #local num ${node[count]};
+    #echo {<139>$cnt.$cn（$long，$abbr）连接节点：$num 个};
+    #foreach ${node[links][%*]} {link} {
+      #echo {    ${link[cn]}（${link[long]}，${link[abbr]}）};
+    };
+  };
+};
+#alias goto_goto {
+  #local dst $destination;
+  #local pst $position;
+  #nop #echo {$pst => $dst};
+  #if {&{dst} && &{pst}} {
+    #if {"$dst" == "$pst"} {
+      #echo {<139>你喜欢原地逛逛么？};
+    };
+    #elseif {&{gtlist_abbr[$dst]}} {
+      #var gt_dst $dst;
+      #var gt_pst $pst;
+      goto_find;
+    };
+    #elseif {&{gtlist_cn[$dst]}} {
+      #var gt_dst ${gtlist_cn[$dst]};
+      #var gt_pst $pst;
+      goto_find;
+    };
+    #elseif {&{gtlist_long[$dst]}} {
+      #var gt_dst ${gtlist_long[$dst]};
+      #var gt_pst $pst;
+      goto_find;
+    }; 
+    #else {
+      #echo {<171>出错了..};
+    };
+  };
+  #else {
+    #echo {<171>出错了...};
+  };
+};
+#nop 寻路算法：广度优先搜索;
+#alias goto_find {
+  #local pst $gt_pst;
+  #local dst $gt_dst;
+  #local pst_cn ${goto_route[$pst][cn]};
+  #local dst_cn ${goto_route[$dst][cn]};
+  #echo {<129>开始计算从[$pst_cn]到[$dst_cn]的路径};
+  #echo ...;
+  #nop 调用寻找节点函数;
+  #var nodes {@find_node{$pst;$dst}};
+  #nop 调用寻找路径函数;
+  #var paths {@find_path{$nodes}};
+  #echo {<139>节点：${nodes[]}};
+  #echo {<139>路径：${paths[]}};
+  #echo {<129>我们的征途是星辰大海...};
+  #delay 1 goto_go;
+};
+#alias goto_go {
+  #list paths simplify;
+  #nop 调用命令解析器执行;
+  cmd_set {$paths};
+  #line oneshot #action {^-->命令解析执行完毕<--$} {
+    #delay 0 {#show {@bc1{已到达目的地}}};
+    sh $destination;
+  };
+};
+
+#nop 寻找节点函数;
+#function find_node {
+  #nop 出发点;
+  #local pst %1;
+  #nop 目标点;
+  #local dst %2;
+  #nop 初始化节点关系集合;
+  #local nodes {};
+  #nop 当前深度起点;
+  #list todo1 create {$pst};
+  #math depth 1;
+  #nop 第一级循环;
+  #while {1} {
+    #math depth {$depth+1};
+    #nop 循环次数大于 100（防御性）或找到目标节点结束循环;
+    #if {$depth > 100 || &{nodes[$dst]}} {
+      #break;
+    };
+    #nop 建立缓存;
+    #local todo2 {$todo1};
+    #nop 清空当前深度节起点;
+    #list todo1 create {};
+    #nop 第二级循环;
+    #foreach *{todo2[]} index {
+      #nop 获取当前起点值;
+      #local node ${todo2[+$index]};
+      #nop 获取当前起点下级节点;
+      #local links ${goto_route[$node][links]};
+      #nop 第三级循环;
+      #foreach *{links[]} link {
+        #nop 检查节点集合中是否存在当前节点;
+        #if {&{nodes[$link]}} {
+          #nop;
+        };
+        #else {
+          #nop 添加新节点到新深度;
+          #list todo1 add {$link};
+          #nop 将新节点及其出发点加入节点关系集合;
+          #format nodes {%s} {$nodes{$link}{$node}};
+        };
+      };
+    };
+  };
+  #nop 检查目标节点是否存在;
+  #if {&{nodes[$dst]}} {
+    #nop 追溯目标点到出发点;
+    #list steps create {};
+    #local stepk $dst;
+    #nop 将父节点挨个插入列表;
+    #list steps insert 1 $stepk;
+    #while {"$stepv" != "$pst"} {
+      #local stepv ${nodes[$stepk]};
+      #list steps insert 1 {$stepv};
+      #local stepk $stepv;
+    };
+    #return $steps;
+  };
+  #else {
+    #echo <110>找不到可用的节点。<070>;
+    #return;
+  }
+};
+#nop 寻找路径函数;
+#function find_path {
+  #local nodes {%0};
+  #list paths create {};
+  #local prev {};
+  #loop 2 &{nodes[]} cnt {
+    #math prev {$cnt-1};
+    #local prev ${nodes[+$prev]};
+    #local next ${nodes[+$cnt]};
+    #local path ${goto_route[$prev][links][$next][path]};
+    #foreach ${path[]} dir {
+      #list paths add $dir;
+    };
+  };
+  #return $paths;
+};
+
+#class xiaoyao close;

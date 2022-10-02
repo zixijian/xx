@@ -1,0 +1,179 @@
+#nop 命令解析器;
+
+/*
+Author:xgg
+
+功能：解析执行使用分号分隔的命令列表。
+
+例如：
+cmd_set {1;2;3;busy1;wait 5;waitfor 666;waitline 888;stop}
+
+列表中特定参数有：
+
+1）wait <n> 等待给定秒数，省略参数则等待 2s。
+2）waitfor 等待给定文本出现。
+3）waitline 等待给定行出现。
+4）busy1 等待 2s。
+5）stop 停止执行。
+
+run 恢复执行。
+
+*/
+
+#nop ====根据服务器指令数限制修改====;
+
+#nop 每秒最大命令数;
+#var step_accu_max {5};
+#nop 命令间隔时间;
+#var step_short {0.2};
+#nop 指令数超限间隔时间;
+#var step_long {1};
+
+#nop ====以下为代码实现部分，勿随意修改====;
+
+#nop 等待指定时间;
+#ali {wait}{
+    #switch {"%1"}{
+        #case {""}{
+            #var cmd {wait 2};
+        };
+        #default {
+            #var cmd {wait %1};
+        };
+    };
+};
+
+#nop 等待指定事件;
+#alias {waitfor}{
+  #var cmd {waitfor %1};
+};
+
+#nop 等待指定内容;
+#alias {waitline}{
+  #var cmd {waitline %1};
+};
+
+#nop 停止解析执行;
+#alias stop {
+  #echo {<103>停止解析执行..};
+  #var cmd stop;
+};
+
+#nop 继续解析执行;
+#alias run {
+  #echo {@bc1{继续解析执行..}};
+  cmd_do;
+};
+
+#nop ====自定义函数====
+#function {numitems} {#list {%1} size result};
+#function {ismember} {#list {%2} find {%1} result};
+#function {item} {#list {%1} get {%2} result};
+#nop ==================
+
+#nop 解析队列;
+#alias {cmd_set} {
+  #var cmds {};
+  #list cmds create %0;
+  #math stepmax &{cmds[]};
+  #echo {@bc1{当前待执行命令共计 $stepmax 个。}};
+  #line ignore #show {@bc1{队列：{${cmds[]}}}};
+  #math step_accu 1;
+  #math step 1;
+  cmd_do;
+};
+
+#nop 执行队列;
+#alias cmd_do {
+  #if {$step<=$stepmax} {
+    #switch {"$cmd"} {
+      #case {"stop"} {
+        #echo {<171>STOPPING...};
+        #var cmd {};
+      };
+      #case {"wait%s%d"} {
+        #local time {$cmd};
+        #replace time {wait} {};
+        #replace time { } {};
+        #echo {@bc1{等待「$time\s」后行动。}};
+        #delay {$time} cmd_do;
+        #var cmd {};
+      }; 
+      #case {"wait{for|line} %*"} {
+        #local waitfor {$cmd};
+        #var matchline {false};
+        #if { "$cmd" == "waitline %*" } {
+          #format matchline {true};
+        };
+        #replace waitfor {waitfor}  {};
+        #replace waitfor {waitline} {};
+        #replace waitfor { } {};
+        #if { "$matchline" == "true" } {
+          #format waitfor {^%p$} {$waitfor};
+        };
+        #else {
+          #format waitfor {%p} {$waitfor};
+        };
+        #var cmd {
+          #class cmd_do_tmp kill;
+          #class cmd_do_tmp open;
+          #echo {@bc1{等待「$waitfor」出现。}};
+          #action {$waitfor} {
+            #class cmd_do_tmp kill;
+            #delay 1 cmd_do;
+          };
+          #class cmd_do_tmp close;
+        };
+        $cmd;
+      };
+      #default {
+        #var cmd @item{cmds;$step};
+        #nop #echo {
+          @bc1{当前执行第 $step 个命令：「${cmds[+$step]}」}
+        };
+        #if {"$cmd"=="busy1"} {
+          #echo {<103>BUSYING...};
+          #math step_accu {$step_accu+1};
+          #math step {$step+1};
+          #delay 2 cmd_do;
+        };
+        #else {
+          $cmd;
+          #math step_accu {$step_accu+1};
+          #math step {$step+1};
+          #if {$step_accu >= $step_accu_max} {
+            #delay $step_long cmd_do;
+            #math step_accu 1;
+          };
+          #else {
+            #delay $step_short cmd_do;
+          };
+        };
+      };
+    };
+  };
+  #else {
+    #show {@bc1{命令解析执行完毕}};
+  };
+};
+  
+#nop 测试;
+#alias cmd_test { 
+  cmd_set {
+    #echo 1;
+    wait;
+    #echo 2;
+    waitfor 666;
+    #echo 3;
+    busy1;
+    #echo 4;
+    stop;
+    waitline 999;
+    #echo 5;
+    #echo 6;
+    #echo 7;
+    #echo 8;
+    #echo 9;
+    busy1;
+  };
+};

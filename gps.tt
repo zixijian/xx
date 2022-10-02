@@ -1,0 +1,21 @@
+#nop 定位房间;
+
+#class gps open;
+
+#nop 设置当前位置;
+#alias sethere {
+  #var position {%1};
+  gt here
+};
+
+#nop 锚定匹配;
+#var SUF { - };
+
+#act {^南城客栈${SUF}$} {sethere {kz}};
+#act {^礼品店${SUF}$} {sethere {lpd}};
+#act {^十字街头${SUF}$} {sethere {szjt}};
+
+#nop #act {^${SUF}$} {sethere };
+
+
+#class gps close;

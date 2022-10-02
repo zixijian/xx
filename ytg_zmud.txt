@@ -1,0 +1,208 @@
+#ALIAS atconnect {g;n;@myid;@mypw;y}
+#ALIAS 长安城 {e;s;#sl .^ad3c2d2a3bc2abcd2baca2bacabcdbcdfbhe2c2dhmngfgad2a2bdm14o14pncbfhbmcm6o6pndnagdbadbadcgc2dbaddcca2d3cdgc2dcadcabca3bcd2aca2bpoacbdcbc2dabdcoa2bac2dcoa2bac2dcoc2dc3pcbc2dc2bz;follow @k_target}
+#ALIAS 长安城西 {e;s;w;#if @kill_block=0 {s;withdraw 20 coin;#AL nobusy {n;#4 w;#AL pathc {give 20 coin to ma dao};#sl .^2dgef2dfd]gdiabj2dc[n2a3bdlkz;follow @k_target};judgebusy} {#4 w;#AL pathc {#var k_target {ma dao}};#sl .^2dgef2dfd]gdiabj2dc[n2a3bdlkz;follow @k_target}}
+#ALIAS 高老庄 {e;s;#13 s;#4 w;#AL pathc {#var k_target {xia pengzhan}};#AL pathd {#if @kill_block {climb wall} {no_find;#3 s;accept tai bai}};#sl .^6da4bcdfe3a2cb2abcbacac2dcac2dcac2do#npcaw2acivxucdjd2bw3bz;follow @k_target}
+#ALIAS 普陀山 {e;s;#16 s;swim;#sl .^2a2iua2cdba3dcbacamnckagfblkaea3ef3gh2e2g3f2habcmn2dmnca3bz;follow @k_target}
+#ALIAS 将军府 {e;s;e;e;s;#AL pathc {answer 拜师};#AL pathd {bian qin bing};#sl .^vbcdf2cdbc2hbfbhabgdfbd2cdaeagdoabpceadc4a2dgop2hwopg3cefz;follow @k_target}
+#ALIAS 红楼一梦 {e;s;w;s;withdraw 220 coin;#AL nobusy {n;e;s;e;give 10 coin to er;buy pillow from boss;e;#t+ k_hll;sleep};judgebusy}
+#ALIAS 方寸山 {e;s;#13 s;#10 w;nw;#AL pathc {climb pine};#sl .^iavpdba2d2cia()k2hecde2iua2cda2ba2dcadcecdb2aopbfiagegemnfhfhbjz;follow @k_target}
+#ALIAS 江州城 {e;s;#16 s;w;#sl .^dbadabd4b2adcacd2ac2dca3d3c4a6bdb2ab2dd3(bz;follow @k_target}
+#ALIAS 龙宫 {e;s;#16 s;#3 e;dive;#AL pathc {turn statue};#AL pathd {#if @kill_block {random_step} {no_find;ne;w;w;u;accept tai bai}};#AL pathe {random_lgout};#AL nobusy {#sl .^2ce2c2hbacd2g2eabcd2fsc2aecdfgh4bfehcdg2ac2s2ca2bac2a4d6b4c2a2vmn2da2bad2t2dt2d2f20w20yz;follow @k_target};judgebusy}
+#ALIAS nobusy {n;e;judge_status}
+#ALIAS judgebusy {#t+ judgebusy;exert}
+#ALIAS longgongout {launch}
+#ALIAS 开封城 {e;s;#5 e;#sl .^7cbach2c2dbs2bd2cglbdbdcbc2b2acacdadakatagecda2c2a2b2dacd2a2c2dgadfgaechcij2cac2hf2g2d2bfb2da2ba2c2bdcbdchz;follow @k_target}
+#ALIAS ask_yuan {#t+ yuan;#if @kill_block=0 {fangqi_all};place newbie gift;ask yuan tiangang about kill}
+#ALIAS time1 {#var time1 %eval(%time(h)*3600+%time(n)*60+%time(s))}
+#ALIAS time2 {#var time2 %eval(%time(h)*3600+%time(n)*60+%time(s));#if @time2<@time1 {#add time2 86400}}
+#ALIAS judge_time {time2;#if (@finish or @try_time>2) {#if @finish=0 {yuan_cd=301};#math past_time (@time2-@time1);#if @past_time>@yuan_cd {n;w;go_yuan} {#math left_time (@yuan_cd-@past_time);#if @left_time<5 {left_time=8};#ts @left_time;action={go_yuan1};#if (@gourou>0 and @left_time>20 and (@time2-@time3)>360) {give_rou};#wa 1000;#sh 等@left_time秒去接任务;s;e;}} {#beep;#wa 500;#beep;#wa 10000;n;w;@monster_place}}
+#ALIAS taibai_ca {#6 ed;#3 e;se;#5 n;emote 说道：再走几步去长安城十字街头看看情况。}
+#ALIAS er {exert recover}
+#ALIAS ef {exert refresh}
+#ALIAS fangqi_all {fangqi hammer;fangqi dodge;fangqi parry;fangqi force;fangqi spells;fangqi moondance}
+#ALIAS judgeidle {#if @idle {finish=1;quit;#con} {idle=1}}
+#ALIAS play_gift {place newbie gift;play newbie gift}
+#ALIAS kkk {play_gift;#forall @attach_hi {%i}}
+#ALIAS yao_all {yao bonnet;yao pifeng;yao armor;yao tianyi;yao shield;yao yupei;yao ring;yao shoes;yao pai;#4 yao @fetch_wq;buy newbie gift from boss;wear all;wield all}
+#ALIAS numw {#var nume 0;#if %pos(万,@numc)>0 {#var numz {%left(@numc,%pos(万,@numc)-1)};numq;#var nume {%eval(@numa*10000)};#var numz {%right(@numc,%pos("万",@numc)+1)}} {#var numz {@numc}};numq;#add nume {@numa}}
+#ALIAS numq {#var numa 0;#var numz {%remove(零,%replace(@numz,九,9))};#var numz {%replace(%replace(%replace(%replace(@numz,四,4),一,1),二,2),三,3)};#var numz {%replace(%replace(%replace(%replace(@numz,五,5),六,6),七,7),八,8)};#if %pos(千,@numz)>0 {#var num1 {%left(@numz,%pos(千,@numz)-1)};#add numa {%eval(@num1*1000)};#var numz {%right(@numz,%pos(千,@numz)+1)}};#if %pos(百,@numz)>0 {#var num1 {%left(@numz,%pos(百,@numz)-1)};#add numa {%eval(@num1*100)};#var numz {%right(@numz,%pos("百",@numz)+1)}};#if %pos(十,@numz)>0 {#var num1 {%max(1,%left(@numz,%pos(十,@numz)-1))};#if @num1=0 {num1=1};#add numa {%eval(@num1*10)};#var numz {%right(@numz,%pos(十,@numz)+1)}};#if %len(@numz)>0 {#add numa {@numz}}}
+#ALIAS judge_full {#case @full_order {eat dan;judge_status} {play_gift;eat yao;#3 exert heal;er;ef;judge_status} {s;s;e;buy wan from yang;eat wan;w;n;e;judge_status} {w;s;withdraw 20 silver;#AL nobusy {n;e;judge_status};judgebusy} {s;s;e;buy 10 yao from yang;w;n;e;judge_status} {s;s;e;buy 10 dan from yang;w;n;e;judge_status} {judge_time}}
+#ALIAS judge_status {full_order=7;#t+ hp;dan=0;yao=0;silver=0;#if @kill_block {i} {i};hp;#wa 2000;#t- hp;set no_teach judgefull}
+#ALIAS hphp {#t- auto;#t+ auto_hp;hp;#wa 500;#t- auto_hp;#t+ auto}
+#ALIAS gogo {#t+ find;#step;follow @k_target}
+#ALIAS pathc {give 20 coin to ma dao}
+#ALIAS judge_direction {i=1;#forall @direction {#if @last_direction=%i {pos=@i} {#add i 1}};#if %mod(@pos,2) {del_direction=%word(@direction,(@pos+1),|)} {del_direction=%word(@direction,(@pos-1),|)};#if %ismember(out,@exit_total) {last_direction=out} {#if %ismember(@del_direction,@exit_total) {exit_total=%delitem(@del_direction,@exit_total);#add exit_num -1};last_direction=%word(@exit_total,%random(1,@exit_num),|)}}
+#ALIAS random_step {#case %random(1,4) {e} {w} {s} {n}}
+#ALIAS random_lgout {#case %random(1,4) {n;ne;w;w;u} {e;ne;w;w;u} {s;ne;w;w;u} {w;ne;w;w;u}}
+#ALIAS pathd {bian qin bing}
+#ALIAS pathe {random_lgout}
+#ALIAS no_find {#t- find;#add try_time 1}
+#ALIAS find_look {#t- kill_s;#t- kill;#t+ find_look;lost_find=0;look}
+#ALIAS bishuizhou {buy jiudai from boss;w;n;w;w;w;n;set no_accept 0;give jiudai to yuan shoucheng;s;tear book;e;e;e;s;e;set report_message_status 0}
+#ALIAS putuoout {launch}
+#ALIAS jjfout {s;d;#2 w;e;nw;n;ne;n;#2 nw;ne;n;#2 w;e;n}
+#ALIAS give_rou {s;e;buy gourou from boss;w;#9 s;se;n;enter;knock door;set public 给觉远和尚吃狗肉;#AL nobusy {give gou rou to wu seng};judgebusy}
+#ALIAS time3 {#var time3 %eval(%time(h)*3600+%time(n)*60+%time(s))}
+#ALIAS go_yuan1 {w;n;#if @yao_weapon {ne;#loop @yao_weapon yao @fetch_wq;sw};n;w;ask_yuan}
+#ALIAS go_yuan {#if @yao_weapon {ne;#loop @yao_weapon yao @fetch_wq;sw};n;w;ask_yuan}
+#ALIAS yao_all_pet {whisper @myid~'s yao armor;whisper @myid~'s yao tianyi;whisper @myid~'s yao pifeng;whisper @myid~'s yao bonnet;whisper @myid~'s yao shield;whisper @myid~'s yao shoes;whisper @myid~'s yao dagger;whisper @myid~'s yao hammer;whisper @myid~'s wield all;whisper @myid~'s wear all}
+#ALIAS 月宫 {#AL pathc {#var k_target {wu gang1}};#AL pathd {#if @kill_block {climb tree} {climb tree}};#AL pathe {#5 cai lian;er;fangqi moondance;no};e;s;#7 w;nw;ne;#sl .^3gd(2l2(i3dcmn3cad2cda2bcmndw2um2adupba2cda2dcad2chbc2dbdb3yz;follow @k_target}
+#ALIAS show_start_time {#sa @monster_cn开始：%time("yy-mm-dd hh:nn:ss")，@monster_place}
+#ALIAS show_killed_time {#sa @monster_cn完成：%time("yy-mm-dd hh:nn:ss")}
+#ALIAS atb {accept tai bai}
+#FUNC monster_place {长安城西}
+#FUNC num {0}
+#FUNC monster_cn {狗熊精}
+#FUNC monster_en {xgg's gouxiong jing}
+#FUNC find_end {changan_ca}
+#FUNC time1 {71037}
+#FUNC time2 {51839}
+#FUNC left_time {221}
+#FUNC past_time {80}
+#FUNC myid {xgg}
+#FUNC mypw {88888888}
+#FUNC food {1220}
+#FUNC water {1244}
+#FUNC yao_weapon {0}
+#FUNC idle {0}
+#FUNC action {judgeidle}
+#FUNC kee_ratio {100}
+#FUNC sen_ratio {100}
+#FUNC numc {一百}
+#FUNC nume {100}
+#FUNC numz {""}
+#FUNC silver {15}
+#FUNC numa {100}
+#FUNC num1 {1}
+#FUNC dan {100}
+#FUNC yao {100}
+#FUNC full_order {4}
+#FUNC sen {660}
+#FUNC kee {684}
+#FUNC max_kee {800}
+#FUNC max_sen {660}
+#FUNC yao_num {0}
+#FUNC dan_num {0}
+#FUNC k_target {xgg's gouxiong jing}
+#FUNC block_npc_cn {夏鹏展|吴刚|边关守将|青鳝力士|乌鳅力士|赤鲤力士|黄鲳力士|白鲨力士|紫鲭力士|金鳌力士|银蛎力士|马盗}
+#FUNC block_npc_en {xia pengzhan|wu gang|li shi|ma dao}
+#FUNC kee_recover {0}
+#FUNC direction {north|south|west|east|southwest|northeast|northwest|southeast|southup|northdown|westup|eastdown|up|down|enter|out}
+#FUNC exit_total {east}
+#FUNC exit_num {1}
+#FUNC i {16}
+#FUNC del_direction {up}
+#FUNC last_direction {east}
+#FUNC pos {14}
+#FUNC kill_block {0} {0}
+#FUNC dh {57}
+#FUNC yuan_cd {120} {120}
+#FUNC finish {1}
+#FUNC try_time {1}
+#FUNC sen_recover {0}
+#FUNC target {xgg's gouxiong jing}
+#FUNC try_find {4}
+#FUNC lost_find {0}
+#FUNC target_dir {16}
+#FUNC kill_done {1}
+#FUNC fetch_wq {hammer}
+#FUNC wq {meihua hammer}
+#FUNC attach_hi {}
+#FUNC gourou {0} {0}
+#FUNC time3 {71028}
+#FUNC rou_num {0}
+#FUNC block_guai_cn {黄眼怪狐}
+#FUNC block_guai_en {huang yan guai hu}
+#FUNC yuan_request {1}
+#FUNC yuan_finish {1}
+#FUNC wx {126}
+#FUNC ztqn {320}
+#FUNC tmp_pos {4}
+#PATH moon {aca2cdag2dcbd2cbc2dbaodc2bn2dcmnd2abc2dcb3dmnd3cj2)2k)c3h}
+#TRIGGER {{你上一个动作还没有完成，不能施用内功。|你现在不能移动}} {#t- judgebusy;#wa 1000;judgebusy} {judgebusy} 548
+#TRIGGER {{你要用内功做什么|对你吐吐舌头，说：刚吃过饭，不要乱用内功！}} {#t- judgebusy;nobusy} {judgebusy} 548
+#TRIGGER {^????近有(%x)~((*)~)在(%x)出没，为害不小，请速去收服！} {#t- yuan;#add yuan_request 1;findpet;play newbie gift;er;ef;idle=0;finish=0;try_time=1;action=judgeidle;#ts 240;yao_weapon=0;monster_cn=%1;target=%lower(%2);#var monster_en %lower(%2);#var tmp_pos %pos("'",@monster_en);#if (@tmp_pos<1) {#var monster_en %concat(@myid,~'s ,@monster_en)};k_target=@monster_en;monster_place=%3;show_start_time;#wa 2000;@monster_place;time1} {yuan} 548
+#TRIGGER {^????……祥云徐徐降落，太白金星和你从里走出。} {#wa 2000;s;#2 w;#2 n;#2 e;#5 s;#4 w;ask moli qing about back} {back} 519
+#TRIGGER {^????你还是到外面去接受太白金星的邀请吧！} {#wa 100;#if %pos(@monster_place,普陀山) {putuoout};#t+ back_look;look} {back} 519
+#TRIGGER {^????饮水：%s(%d)/} {water=%1;#if @water<100 {full_order=3}} {hp} 549
+#TRIGGER {^????食物：%s(%d)/} {food=%1;#if @food<100 {full_order=3}} {hp} 549
+#TRIGGER {^  (%x)两银子~(Silver~)} {#var numc {%1};numw;#var silver {@nume};#if @silver<20 {full_order=4}} {in} 519
+#TRIGGER {^  (*)包金创药~(Jinchuang yao~)} {#var numc {%1};numw;#var yao {@nume};#if @yao<20 {full_order=5}} {in} 519
+#TRIGGER {^  (*)颗混元丹~(Hunyuan dan~)} {#var numc %1;numw;#var dan {@nume};#if @dan<20 {full_order=6}} {in} 519
+#TRIGGER {^????设定环境变数：no_teach = "judgefull"} {#wa 1000;judge_full} {in} 519
+#TRIGGER {^????~(%s你{浑身无力，四肢松软，看上去有气无力了|重伤之下, 脸色十分苍白难看|看起来可能有些累了|似乎有点上气不接下气，但还算灵活|迷迷糊糊，摇摇晃晃，已经辨不出东西南北了|动作似乎开始有点不太灵光，但是仍然有条不紊|气喘嘘嘘，看起来状况并不太好|似乎十分疲惫，看来需要好好休息了|已经一副头重脚轻的模样，正在勉力支撑着不倒下去|看起来已经力不从心了|摇头晃脑、歪歪斜斜地站都站不稳，眼看就要倒在地上|已经陷入半昏迷状态，随时都可能摔倒晕去}。%s~)} {hphp} {auto} 519
+#TRIGGER {^????~(%s你{看起来受了点小伤|有些大伤口, 看来受伤实在不轻|看来健康良好|受了几处伤，不过似乎并不碍事|看来有一些刮伤|全身已经血肉模糊, 随时都可能死去|似乎受了点轻伤，不过光从外表看不大出来|看起来可能受了点轻伤|浑身伤口鲜血四溅，象个血人一样拼命挣扎着|受伤不轻，看起来状况并不太好|连内脏都暴露出来了, 已经命在旦夕|气息粗重，动作开始散乱，看来所受的伤着实不轻|已经伤痕累累，正在勉力支撑着不倒下去|受了相当重的伤，只怕会有生命危险|伤重之下已经难以支撑，眼看就要倒在地上|受伤过重，已经奄奄一息，命在旦夕了|受伤过重，已经有如风中残烛，随时都可能断气}。%s~)} {hphp} {auto} 519
+#TRIGGER {^????~(%s你{两眼发直，口角流涎，神智开始混乱|拍了拍自己的脑袋，似乎有点不太得劲|看起来有些迷糊了|的确有点迷糊了，但还辨得出东西南北|两眼发直，口角流涎，神智开始混乱|迷迷糊糊，摇摇晃晃，已经辨不出东西南北了|神智已经处在极度混乱中|心智已经完全迷失，随时都有可能背过气去}} {hphp} {auto} 519
+#TRIGGER {^????这里没有 @k_target。} {#gag;#wa 300;#step;follow @k_target} {find} 548
+#TRIGGER {^????你决定开始跟随(%x)一起行动。} {#cap kill;kee_recover=0;sen_recover=0;#t+ kill;#t- find;#cw 418;#if %ismember(%1,@block_npc_cn) {#if @kill_block {enforce max;pure @k_target} {#t- kill;#wa 8000;#t+ find;follow @k_target}};#if %pos(%1,@monster_cn) {#t+ kill_s;#if @kill_block {enforce max;pure @k_target} {kill @k_target;whisper @myid~'s kill @k_target;kkk}}} {find} 548
+#TRIGGER {^????你天真地望着%x。} {#if (@kee_recover=0 and @sen_recover=0) {kkk};#wa 2000;kill @k_target;pure @k_target} {kill} 548
+#TRIGGER {^????只听见「啪」地一声，你手中的%x已经断为两截！} {wield @wq;#add yao_weapon 1} {kill} 548
+#TRIGGER {^(%x)死了。} {#if %ismember(%1,@block_npc_cn) {#t- kill;#t+ find;#wa 2000;follow @k_target}} {kill} 548
+#TRIGGER {^????荡悠悠三更梦} {#t- k_hll;#sl .^obnmc2dcadcacdamnc2dcaopac2dcac2dcopapoarqz;follow @k_target} {k_hll} 548
+#TRIGGER {^????气血：%s(%d)/%s(%d)%s~((*)~%~)} {kee=%1;max_kee=%2;kee_ratio=%3;yao_num=0;#if @kee_ratio<98 {#math yao_num (@max_kee*100/@kee_ratio-@max_kee)/50;#loop @yao_num eat jinchuang yao};#if ((@max_kee-@kee)>30 or @yao_num>0) {kee_recover=1;#AL nobusy {er};judgebusy}} {auto_hp} 548
+#TRIGGER {^????精神：%s(%d)/%s(%d)%s~((*)~%~)} {sen=%1;max_sen=%2;sen_ratio=%3;dan_num=0;#if @sen_ratio<98 {#math dan_num (@max_sen*100/@sen_ratio-@max_sen)/40;#loop @dan_num eat hunyuan dan};#if ((@max_sen-@sen)>30 or @dan_num>0) {#AL nobusy {ef};judgebusy}} {auto_hp} 548
+#TRIGGER {^????精神：%s%d/%s%d%s~((*)~%~)} {sen_ratio=%1;#if @sen_ratio<100 {full_order=1}} {hp} 549
+#TRIGGER {^????气血：%s%d/%s%d%s~((*)~%~)} {kee_ratio=%1;#if @kee_ratio<100 {full_order=2}} {hp} 549
+#TRIGGER {^????????这里%x的出口是(*)。} {exit_total=%1;#var exit_total %replace(@exit_total,、,|);#var exit_total %replace(@exit_total, 和 ,|);exit_num=%numwords(@exit_total,|);#if @exit_num=1 {last_direction=@exit_total} {judge_direction};#t- back_look;@last_direction;accept none;accept tai bai} {back_look} 548
+#TRIGGER {^????饮水：*道行：%s(%x)年} {#var numc {%1};numw;#var dh {@nume};#if @dh<20 {yuan_cd=121} {yuan_cd=301}} {dh} 519
+#TRIGGER {^????????这里%x的出口是(*)。} {#if @lost_find {#add target_dir 1} {exit_total=%1;#var exit_total %replace(@exit_total,、,|);#var exit_total %replace(@exit_total, 和 ,|);exit_num=%numwords(@exit_total,|);lost_find=1;target_dir=0;#forall @exit_total {l %i};l;#add try_find 1};#if @target_dir>@exit_num {go %word(@exit_total,%random(1,@exit_num),|);#if @try_find>9 {#t- kill;#t- kill_s;#t- find_look;accept tai bai} {#wa 1000;find_look}}} {find_look} 548
+#TRIGGER {^????「咚」的一声，你从机关掉到了铁笼中} {#t- k_caw;#AL pathc {#var k_target {wu jiang}};#loop 10 {break;break;er};play_gift;#sl .^n2a3bvdxlkz;follow @k_target} {k_caw} 548
+#TRIGGER {^????你{略一凝神，吸了口气，精神看起来清醒多了。|现在精神饱满，不需吸气。}} {sen_recover=0;#if @kee_recover=1 {#AL nobusy {er};judgebusy}} {kill} 518
+#TRIGGER {^????你{深深吸了几口气，脸色看起来好多了。|现在气力充沛，不需吸气。}} {kee_recover=0} {kill} 548
+#TRIGGER {^????@monster_cn惨叫一声，死了。} {#t- kill_s;#t- kill;#add yuan_finish 1;finish=1;touxiang;#wa 2000;#AL nobusy {#if %pos(@monster_place,龙宫) {longgongout};#if %pos(@monster_place,普陀山) {putuoout};#if %pos(@monster_place,将军府) {jjfout};accept none;accept tai bai};judgebusy;hp} {kill} 548
+#TRIGGER {^????你要对谁做这个动作？} {er;ef;#if @finish=0 {try_find=0;#AL nobusy {find_look};judgebusy}} {kill_s} 548
+#TRIGGER {^????那里云雾缭绕，什么也看不清楚。} {#add target_dir 1} {find_look} 548
+#TRIGGER {^??????????这里没有任何明显的出路。} {#add target_dir 1} {find_look} 548
+#TRIGGER {^????慢慢地你终于又有了知觉．．．} {#t- kill;#t- kill_s;#t- find_look;er;ef;accept tai bai} {auto} 519
+#TRIGGER {^????????????????????@monster_cn~(%proper(@target)~)} {#cw 48;#t- find_look;#t+ kill_s;go %word(@exit_total,@target_dir,|);#t+ find;follow @k_target} {find_look} 548
+#TRIGGER {^????武僧低头道：阿弥陀佛，已经(*)块了！} {time3;#var numc {%1};numw;#var rou_num {@nume};#if @rou_num<250 {gourou=1} {gourou=0};out;out;s;nw;#9 n;e} {auto} 519
+#TRIGGER {^????马盗大声喝道：快给钱！} {give 20 coin to ma dao} {auto} 519
+#TRIGGER {^??????为维护和发展本游戏，巫师有时需要监听玩家。} {#ti off;#wa 8000;#bu 2} {auto} 519
+#TRIGGER {^????你的内力不够。} {play_gift;er;ef} {auto} 519
+#TRIGGER {^(%x)一把抓住了你！} {#t- find;block_guai_cn=%1;#var block_guai_cn %remove(>,@block_guai_cn);id here} {find} 548
+#TRIGGER {^@block_guai_cn%s=%s(*),*,*,*} {block_guai_en=%1;#back;give 1 silver to @block_guai_en;#wa 1000;gogo} {auto} 519
+#TRIGGER {{过来|离开|突然出现}} {#gag} {auto} 519
+#TRIGGER {^????这里没有这个人。} {#t- yuan;quit;#con} {yuan} 548
+#TRIGGER {^????这里不准战斗。} {#wa 2000;kill @k_target} {auto} 519
+#TRIGGER {只见半空中降下一朵云彩} {#gag} {} 519
+#TRIGGER {奋力望上一跳，似乎想飞起来。结果离地不到三尺就一个倒栽葱摔了下来。} {#gag} {} 519
+#TRIGGER {我找主人去了} {#gag} {} 519
+#TRIGGER {只见狂风大作} {#gag} {} 519
+#TRIGGER {只见平地吹起一阵阴风} {#gag} {} 519
+#TRIGGER {再吹一声口哨} {#gag} {} 519
+#TRIGGER {手一指} {#gag} {} 519
+#TRIGGER {^????食物：*  武学：(*)} {wx=%1} {} 519
+#TRIGGER { 潜能：%s(%d)%s杀气：} {ztqn=%1} {} 519
+#TRIGGER {^????顿时你觉得口中生津，一股仙气自上而下如醍醐灌顶。} {#wa 1000;e} {hp} 549
+#TRIGGER {^????袁天罡对你一拱手：这位*请速去天廷协助灭妖！} {#cap kill;#t- yuan;action=hp;e;s;s;e;u;hp;#ts 300} {yuan} 548
+#TRIGGER {^????袁天罡说道：在下不是请您去收服(%x)吗？} {} {yuan} 548
+#TRIGGER {^????请不要在拱猪房里杀戮，谢谢。} {#wa 2000;kill @k_target} {auto} 519
+#TRIGGER {^????是休想逃出去的，不过你也可以去试试扳开~(break~)它。} {#loop 10 {break;break;er};play_gift;#sl .^n2a3bdlkz;follow @k_target} {} 519
+#TRIGGER {^????你说道：再走几步去长安城十字街头看看情况。} {#wa 1000;#7 n;emote 说道：检查下武学。;hp} {back} 519
+#TRIGGER {^????护宫卫士大喝一声：下去！你被扔回了下界。} {#wa 1000;#7 n;emote 说道：检查下武学。} {back} 519
+#TRIGGER {^????你说道：检查下武学。} {#wa 1000;emote 说道：检查下潜能。} {back} 519
+#TRIGGER {^????你说道：检查下潜能。} {#wa 100;#if @ztqn>5000 {ne;enter;deposit @ztqn;account;out;sw;judge_status} {judge_status}} {back} 519
+#TRIGGER {^????什么？} {judgebusy} {auto} 548
+#TRIGGER {^????说着，佑圣真君将你引了出来。} {ask moli qing about back} {back} 519
+#TRIGGER {^????你从天上摔了下来，搞了个鼻青脸肿！} {#wa 2000;#6 n;emote 说道：检查下武学。} {back} 519
+#TRIGGER {^????设定环境变数：public = "给觉远和尚吃狗肉"} {#wa 3000;give gou rou to wu seng} {auto} 519
+#TRIGGER {^????战斗中不能接受公开邀请。} {#wa 1000;accept tai bai} {} 519
+#TRIGGER {^????~(%s@monster_cn受伤不轻，看起来状况并不太好。} {kkk} {kill} 548
+#TRIGGER {^????~(%s@monster_cn似乎十分疲惫，看来需要好好休息了。} {kkk} {kill} 548
+#TRIGGER {^????你只觉得手中%x把持不定，脱手飞出！} {wield @wq;#add yao_weapon 1} {kill} 548
+#TRIGGER {^????你得到了(*)经验、(*)道行和(*)潜能！} {#cap kill;show_killed_time} {jinyan} 519
+#TRIGGER {^????@monster_cn完成：} {#cap kill} {jinyan} 519
+#TRIGGER {^????@monster_cn开始：} {#cap kill} {jinyan} 519
+#TRIGGER {^????一阵时空弯曲之后你来到一个陌生的地方，时空穿梭器随之坠毁了！} {#cap kill;} {auto} 519
+#TRIGGER {^?????你一次输入太多命令了。} {#ig;#wa 10000;#ig;accept none;accept tai bai} {auto.to} 548
+#BUTTON 1 {登录设置} {#pr myid 你的帐号！！;#pr mypw 你的密码！！} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}
+#BUTTON 2 {开始} {time3;findpet;drop skirt;drop shoes;drop linen;yuan_request=0;yuan_finish=0;bishuizhou;#wa 2000;w;n;ne;yao_all_pet;#wa 2000;yao_all;#wa 2000;sw;n;w;ask_yuan} {} {} {} {} {} {} {} {} {} {} {} {12} {} {} {}
+#BUTTON 3 {选择武器} {#pi {o:1} {降魔棒:fetch_wq=stick;wq=xiangmo bang} {镇妖剑:fetch_wq=sword;wq=zhenyao sword} {打魔鞭:fetch_wq=whip;wq=damo bian} {斩魔刀:fetch_wq=blade;wq=zhanmo dao} {伏魔杖:fetch_wq=staff;wq=fumo zhang} {宣花斧:fetch_wq=axe;wq=xuanhua fu} {除魔叉:fetch_wq=fork;wq=chumo cha} {梅花锤:fetch_wq=hammer;wq=meihua hammer} {三尖两刃枪:fetch_wq=spear;wq=sanliang spear} {凤凰琴:fetch_wq=qin;wq=fenghuang qin} {虎尾鞭:fetch_wq=mace;wq=tiger mace} {碧玉笛:fetch_wq=di;wq=biyu di} {铁胎弓:fetch_wq=bow;wq=tie gong}} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}
+#BUTTON 4 {设定技能} {#pr attach_hi 灭妖的技能！} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}
+#BUTTON 5 {不杀拦路npc} {kill_block=1} {能杀拦路npc} {kill_block=0} {} {} {} {Size} {70} {23} {} {} {} {112} {112} {} {}
+#BUTTON 6 {不送狗肉} {gourou=1} {要送狗肉} {gourou=0} {} {} {} {} {} {} {} {} {} {112} {112} {} {}
+#BUTTON 7 {机器说明} {#say 1.技能设定必须时用"perform qiankun on @k_target"这种格式，用|分开。;#say 2.白板先捡垃圾到5两以上，然后在客栈点开始。;#say 3.白板就保持不杀拦路npc，建议选择hammer当武器。;#say 4.如果没点杀拦路npc的按钮，默认是不会用技能的，当白板平砍。;#say 5.学了技能后（最好别学技能，白板杀怪），有能力杀拦路npc了，点上能杀拦路npc，手动买点药，丹。;#say 6.如果是走百姓路线，需要送250块狗肉，多个送狗肉的按钮，开启的前提是找青髯老人问到内功奇遇任务后才可开启。;#say 7.启动前，身上先买好200个穿梭器，200颗混元丹，100颗金创药。#say 8.修改了部分版本游戏版本更新后产生的问题，其他仍是使用lbb的机器。（By 焱 20210122）} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}
+#BUTTON 8 {HP} {hp} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}
+#BUTTON 9 {M-start} {#show go place;#wa 100} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}
+#BUTTON 10 {M-reach} {#t- find;#show reach place;#wa 2000;#t+ find} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}
+#BUTTON 11 {i} {i} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}

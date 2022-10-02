@@ -1,0 +1,208 @@
+#nop 遍历区域;
+
+#nop 房间集合;
+#VARIABLE {room_list} {};
+
+#VARIABLE {scout}
+{
+     {quick} {0};
+};
+
+#VARIABLE {quick} {0};
+
+#nop 遍历;
+#ALIAS {scout}
+{
+     #if {"%0" == ""}
+     {
+          #showme <118>命令: scout <区域名>;
+          #return
+     };
+     #if {"%1" == "pause"}
+     {
+          #variable scout[mode] paused;
+          #return
+     };
+     #if {"%1" == "continue"}
+     {
+          #variable scout[mode] scout;
+          #return
+     };
+     #if {"%1" == "reset"}
+     {
+          reset_area $scout[area];
+          #return
+     };
+     #variable scout[area] {%0};
+     #map list {} {} {} {$scout[area]} {variable} {room_list};
+     #if {&room_list[] == 0}
+     {
+          #showme <118>遍历{%1}: 找不到房间;
+          #return;
+     };
+     #loop {1} {&room_list[]} {cnt}
+     {
+          set_room_color *room_list[+$cnt] <128>;
+          set_room_note *room_list[+$cnt] {unchecked};
+          set_room_weight *room_list[+$cnt] {1000}
+     };
+     #map get roomvnum scout[inroom];
+     #map get roomvnum scout[startroom];
+     #variable scout[mode] prune;
+     #loop {1} {&room_list[]} {cnt}
+     {
+          #map at *room_list[+$cnt] #map get roomexits scout[exit];
+          #if {&scout[exit][] == 1}
+          {
+               #map goto *room_list[+$cnt];
+               #map explore *scout[exit][+1];
+               #path save forward scout[path];
+               #foreach {$scout[path]} {scout[walk]}
+               {
+                    #map move $scout[walk]
+               }
+          }
+     };
+     #path destroy;
+     #variable scout[mode] scout;
+     #map goto $scout[inroom];
+     scout_nearest_room;
+     #ticker {scout}{#if {&scout[] && &room_list[]}{#if {"$scout[mode]" != "scout"}{#return};#line quiet {#path save length scout[len];#path save position scout[pos]};#if {$scout[pos] <= $scout[len]}{#path
+walk}}}{0.25}
+};
+
+#nop 遍历附近房间;
+#ALIAS {scout_nearest_room}
+{
+     #variable scout[weight] {1000000};
+     #line quiet {#map find $scout[startroom];#path save length scout[len];#path destroy};
+     #if {$scout[len] == $scout[quick]}
+     {
+          #map at $scout[startroom] #map list {} {} {} {$scout[area]} {unchecked} {variable} {room_list}
+     };
+     #else
+     {
+          #map list {} {} {} {$scout[area]} {unchecked} {variable} {room_list}
+     };
+     #loop {1} {&room_list[]} {cnt}
+     {
+          #if {$room_list[+$cnt][distance] != -1 && $room_list[+$cnt][distance] < $scout[weight]}
+          {
+               #variable scout[weight] $room_list[+$cnt][distance];
+               #variable scout[vnum]   *room_list[+$cnt]
+          }
+     };
+     #if {$scout[weight] == 1000000}
+     {
+          #line ignore #showme <118>scout: Found &{room_list[]} rooms belonging to area '$scout[area]';
+          #line ignore #showme <118>scout: Could not find a path leading to this area, aborting.;
+          reset_area $scout[area]
+     };
+     #else
+     {
+          #map get roomvnum scout[inroom];
+          #if {$scout[vnum] == $scout[inroom]}
+          {
+               scout_mark_room;
+               #delay {scout} {scout_nearest_room} {0.25}
+          };
+          #else
+          {
+               #map find $scout[vnum]
+          }
+     }
+};
+
+#nop 标记房间;
+#ALIAS {scout_mark_room}
+{
+     #if {&scout[] && &room_list[]}
+     {
+          #map get roomarea scout[inarea];
+          #map get roomvnum scout[inroom];
+          #if {"$scout[inarea]" == "$scout[area]"}
+          {
+               set_room_color {$scout[inroom]} {<118>};
+               set_room_weight {$scout[inroom]} {10000};
+               set_room_note {$scout[inroom]} {checked};
+               #unvariable room_list[$scout[inroom]];
+               #if {&room_list[] == 0}
+               {
+                    #delay {0.5}{#showme <118>遍历: 结束;reset_area $scout[area]};
+                    #undelay {scout};
+                    #unticker {scout}
+               }
+          }
+     }
+};
+
+#nop 路径结束事件;
+#EVENT {END OF PATH}
+{
+     #if {&scout[] && &room_list[]}
+     {
+          scout_nearest_room
+     }
+};
+
+#nop 进入房间;
+#EVENT {MAP ENTER ROOM}
+{
+     #if {&scout[]}
+     {
+          #switch {"$scout[mode]"}
+          {
+               #case {"prune"}
+               {
+                    reset_room_weight {}
+               };
+               #case {"scout"}
+               {
+                    scout_mark_room
+               }
+          }
+     }
+};
+
+#nop 设置房间描述;
+#ALIAS {set_room_note}
+{
+     #map at {%1} #map set roomnote %2
+};
+
+#nop 设置房间颜色;
+#ALIAS {set_room_color}
+{
+     #map at {%1} #map set roomcolor %2
+};
+
+#nop 设置房间权重;
+#ALIAS {set_room_weight}
+{
+     #map at {%1} #map get roomweight scout[weight];
+     #if {$scout[weight] < %2}
+     {
+          #map at {%1} #map set roomweight $scout[weight] + %2
+     }
+};
+
+#nop 重设房间权重;
+#ALIAS {reset_room_weight}
+{
+     #map at {%1} #map get roomweight scout[weight];
+     #map at {%1} #map set roomweight $scout[weight] % 1000
+};
+
+#nop 重设区域;
+#ALIAS {reset_area}
+{
+     #map list {} {} {} {%0} {variable} {room_list};
+     #loop {1} {&room_list[]} {cnt}
+     {
+          set_room_color *room_list[+$cnt] <178>;
+          reset_room_weight {*room_list[+$cnt]};
+          set_room_note *room_list[+$cnt] {}
+     };
+     #variable room_list {};
+     #variable scout {}
+};

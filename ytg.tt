@@ -1,0 +1,99 @@
+#nop 袁天罡刷怪;
+#class ytg open;
+
+#nop ==用到的路径==
+#nop 客栈到袁天罡;
+#var kg_ytg {w;n;n;w;};
+#nop 袁天罡到客栈;
+#var ytg_kz {e;s;s;e;};
+#nop 袁天罡到月宫;
+#var ytg_yg {e;s;w;w;w;w;w;w;w;nw;ne;};
+#nop 长安;
+#var ytg_ca {e;s;};
+#nop 长安西;
+#var ytg_cax {e;s;w;s;wthdraw 20 coin;w;w;w;w;give 20 coin to ma dao;};
+#nop 高老庄;
+#var ytg_glz {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;w;w;w;w;}
+#nop 普陀山;
+#var ytg_pts {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;}
+#nop 将军府;
+#var ytg_jjf {e;s;e;e;s;};
+#nop 红楼一梦;
+#var ytg_hlym {e;s;w;s;withdraw 220 coin;n;e;s;e;give 10 coin to er;buy pillow from boss;e;sleep;}
+#nop 方寸山;
+#var ytg_lg {e;s;#13 s;w;w;w;w;w;w;w;w;w;w;nw;}
+#nop 江州城;
+#var ytg_jz {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;w;}
+#nop 龙宫;
+#var ytg_lg {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;e;e;e;};
+#nop 开封城;
+#var ytg_kf {e;s;e;e;e;e;e;};
+
+#nop ==新手装备==;
+#alias ytg_nb {slowdo {$ytg_nb}};
+#var {ytg_nb} {
+  w;
+  n;
+  ne;
+  yao bonnet;
+  yao pifeng;
+  yao armor;
+  yao tianyi;
+  yao shield;
+  yao yupei;
+  yao ring;
+  yao shoes;
+  yao pai;
+  yao sword;
+  buy newbie gift from shang ren;
+  wear all;
+  wield all;
+  sw;
+  s;
+  e;
+  #showme {@bc1{装备完毕};};
+};
+#nop ==准备道具==;
+#alias ytg_dj {slowdo {$ytg_dj}};
+#var {ytg_dj} {
+  w;
+  n;
+  w;
+  s;
+  withdraw 5 gold;
+  n;
+  e;
+  ne;
+  buy 200 chuansuo qi from shang ren;
+  buy newbie gift from shang ren;
+  sw;
+  s;
+  s;
+  e;
+  buy 200 dan from yang zhongshun;
+  buy 100 yao from yang zhongshun;
+  w;
+  n;
+  e;
+  #showme {@bc1{道具准备完毕};};
+};
+
+#nop ==开始任务==;
+#nop 从客栈输入 ytga 开始;
+#nop 穿戴好新手装备;
+#nop 准备穿梭器、丹200、药100。;
+
+#act {@bc1{装备完毕}} {};
+#act {@bc1{道具准备完毕}} {};
+
+#alias ytga {slowdo {$ytga}};
+#var {ytga} {
+  ask yuan about kill;
+};
+
+#act {} {};
+#act {} {};
+#act {} {}
+#act {} {};
+
+#class ytg close;

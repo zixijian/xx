@@ -1,0 +1,83 @@
+#nop 自动注册机;
+#class reg open;
+
+#nop ==定义注册字段==;
+#nop 定义 id 字段;
+#var reg_a {zh};
+#var reg_b {d};
+#var reg_c {a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z;};
+#nop 定义中文名字段;
+#var reg_x {赵;钱;孙;李;周;吴;郑;王;冯;陈;楚;卫;蒋;沈;韩;杨;};
+#var reg_y {一};
+#var reg_z {文;昌;兴;志;运;奇;玉;振;朝;中;锦;韬;耀;华;国;诗;书;育;英;贤;};
+#nop 定义密码字段;
+#var reg_pass {123465};
+#nop 定义邮件字段;
+#var reg_mail {abc@abc.com};
+#nop 定义先天天赋字段;
+#var reg_tala {2;10;3;20;0;30;1;30;9;y;};
+#var reg_talb {2;10;3;26;0;30;1;24;9;y;};
+#nop 一次注册数量;
+#math reg_n {5}; 
+#nop 随机取值函数;
+#function reg_r {
+  #list tmp create {%0};
+  #local num &tmp;
+  #math num {1d$num};
+  #local value {${tmp[+$num]}};
+  #return $value;
+}
+
+#nop ==注册触发==;
+#nop 账户id;
+#act {^您的英文名字：（新玩家请键入 new 注册）$} {
+  #var reg_id {$reg_a$reg_b@reg_r{$reg_c}@reg_r{$reg_c}};
+  #send {$reg_id};
+};
+#act {这个名字已经被别的玩家使用了．．．}{
+  #var reg_id {$reg_a$reg_b@reg_r{$reg_c}@reg_r{$reg_c}};
+  #send {$reg_id};
+};
+#nop 中文名;
+#act {^您的中文名字：} {
+  #var reg_zh {@reg_r{$reg_x}$reg_y@reg_r{$reg_z}};
+  #send {$reg_zh};
+};
+#nop 密码;
+#act {^请设定您的密码：} {#send {$reg_pass};};
+#act {^请再输入一次您的密码，以确认您没记错：} {#send {$reg_pass};};
+#nop 邮箱;
+#act {^您的电子邮件地址：} {#send {$reg_mail};};
+#nop 性别和天赋;
+#act {^您要扮演男性(m)的角色或女性(f)的角色？} {#send {m};};
+#act {^在开始你的西游历程之前，首先要为自己所创造}{$reg_talb};
+
+#nop ==开始注册==
+#alias rega {
+  #split;
+  #ses xyj 82.156.22.5 6666;g;n;new;
+};
+
+#nop ==注册成功触发==;
+#act {^目前权限：(player)$} {
+  #local reg_result {$reg_id;$reg_pass;$reg_zh;$reg_mail};
+  #sys {echo "$reg_result" >> reg.txt};
+  quit;
+};
+
+#class reg_a open;
+#math reg_i {1};
+#eve {SESSION DISCONNECTED} {
+  #if {$reg_i < $reg_n} {
+    #gts #math reg_i {$reg_i+1};
+    #echo $reg_i;
+    rega;
+  };
+  #else {
+    #echo {@bc1{注册 $reg_n 次已完成。}};
+    #gts #math reg_i {1};
+  }; 
+};
+#class reg_a close;
+
+#class reg close;
