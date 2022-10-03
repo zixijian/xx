@@ -9,6 +9,9 @@
 #nop 调色板;
 #read colorpad.tt;
 
+#nop 加载 MSLP 标签;
+#read mouse.tt;
+
 #nop 断线事件;
 #event {SESSION ACTIVATED} {
 	#if {"%0" == "gts"} {#read main.tt}

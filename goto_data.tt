@@ -66,19 +66,98 @@
   {path}{e;s}
 };
 
-#nop 高老庄;
-#var ytg_glz {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;w;w;w;w;}
-#nop 普陀山;
-#var ytg_pts {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;}
-#nop 将军府;
-#var ytg_jjf {e;s;e;e;s;};
-#nop 红楼一梦;
-#var ytg_hlym {e;s;w;s;withdraw 220 coin;n;e;s;e;give 10 coin to er;buy pillow from boss;e;sleep;}
-#nop 方寸山;
-#var ytg_lg {e;s;#13 s;w;w;w;w;w;w;w;w;w;w;nw;}
-#nop 江州城;
-#var ytg_jz {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;w;}
-#nop 龙宫;
-#var ytg_lg {e;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;e;e;e;};
-#nop 开封城;
-#var ytg_kf {e;s;e;e;e;e;e;};
+#var Route_szjt_glz {
+  {cn}{十字街头;高老庄}
+  {long}{shizijietou;gaolaozhuang}
+  {path}{s;s;s;s;s;s;s;s;s;s;s;s;s;w;w;w;w}
+};
+
+#var Route_glz_szjt {
+  {cn}{高老庄;十字街头}
+  {long}{gaolaozhuang;shizijietou}
+  {path}{e;e;e;e;n;n;n;n;n;n;n;n;n;n;n;n;n}
+};
+
+#var Route_szjt_pts {
+  {cn}{十字街头;普陀山}
+  {long}{shizijietou;putuoshan}
+  {path}{s;s;s;s;s;s;s;s;s;s;s;s;s;s;s}
+};
+
+#var Route_pts_szjt {
+  {cn}{普陀山;十字街头}
+  {long}{putuoshan;shizijietou}
+  {path}{n;n;n;n;n;n;n;n;n;n;n;n;n;n;n}
+};
+
+#var Route_szjt_jjf {
+  {cn}{十字街头;将军府}
+  {long}{shizijietou;jiangjunfu}
+  {path}{e;e;s}
+};
+
+#var Route_jjf_szjt {
+  {cn}{将军府;十字街头}
+  {long}{jiangjunfu;shizijietou}
+  {path}{n;w;w}
+};
+
+#var Route_szjt_hlym {
+  {cn}{十字街头;红楼一梦}
+  {long}{shizijietou;honglouyimeng}
+  {path}{w;s;withdraw 220 coin;busy1;n;e;s;e;give 10 coin to er;buy pillow from boss;e;sleep}
+};
+
+#var Route_hlym_kz {
+  {cn}{红楼一梦;南城客栈}
+  {long}{honglouyimeng;kezhan}
+  {path}{u;n;n;n;n;n;u;ask girl about back;w}
+};
+
+#var Route_szjt_fcs {
+  {cn}{十字街头;方寸山}
+  {long}{shizijietou;fangcunshan}
+  {path}{s;s;s;s;s;s;s;s;s;s;s;s;s;w;w;w;w;w;w;w;w;w;w;nw}
+};
+
+#var Route_fcs_szjt {
+  {cn}{方寸山;十字街头}
+  {long}{fanfcunshan;shizijietou}
+  {path}{se;e;e;e;e;e;e;e;e;e;e;n;n;n;n;n;n;n;n;n;n;n;n;n}
+};
+
+#var Route_szjt_jz {
+  {cn}{十字街头;江州}
+  {long}{shizijietou;jiangzhou}
+  {path}{s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;w}
+};
+
+#var Route_jz_szjt {
+  {cn}{江州;十字街头}
+  {long}{jiangzhou;shizijietou}
+  {path}{e;n;n;n;n;n;n;n;n;n;n;n;n;n;n;n;n}
+};
+
+#var Route_szjt_lg {
+  {cn}{十字街头;龙宫}
+  {long}{shizijietou;longgong}
+  {path}{s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;s;e;e;e}
+};
+
+#var Route_lg_szjt {
+  {cn}{龙宫;十字街头}
+  {long}{longgong;shizijietou}
+  {path}{w;w;w;n;n;n;n;n;n;n;n;n;n;n;n;n;n;n;n}
+};
+
+#var Route_szjt_kf {
+  {cn}{十字街头;开封}
+  {long}{shizijietou;kaifeng}
+  {path}{e;e;e;e;e}
+};
+
+#var Route_kf_szjt {
+  {cn}{开封;十字街头}
+  {long}{kaifeng;shizijietou}
+  {path}{w;w;w;w;w}
+};

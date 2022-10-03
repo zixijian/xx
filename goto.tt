@@ -38,7 +38,7 @@ ver：1.0
     #local abbrz &2;
     #list long create ${Route_&1_&2[long]};
     #list cn create ${Route_&1_&2[cn]};
-    #list path create ${path};
+    #list path create {${path}};
     #local longa ${long[+1]};
     #local cna ${cn[+1]};
     #local longz ${long[+2]};
@@ -181,6 +181,8 @@ ver：1.0
   #echo {<139>节点：${nodes[]}};
   #echo {<139>路径：${paths[]}};
   #echo {<129>我们的征途是星辰大海...};
+  set brief 1;
+  set openmap 0;
   #delay 1 goto_go;
 };
 #alias goto_go {
@@ -189,7 +191,9 @@ ver：1.0
   cmd_set {$paths};
   #line oneshot #action {^-->命令解析执行完毕<--$} {
     #delay 0 {#show {@bc1{已到达目的地}}};
-    sh $destination;
+    set brief 0;
+    set openmap 1;
+    sh $gt_dst;
   };
 };
 
@@ -266,7 +270,7 @@ ver：1.0
     #local next ${nodes[+$cnt]};
     #local path ${goto_route[$prev][links][$next][path]};
     #foreach ${path[]} dir {
-      #list paths add $dir;
+      #list paths add ${dir};
     };
   };
   #return $paths;
