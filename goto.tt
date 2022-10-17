@@ -114,11 +114,14 @@ ver：1.0
     #local num ${here[count]};
     #echo {<139>当前位置：$cn（$long，$abbr）连接节点 $num 个};
     #foreach ${here[links][%*]} {link} {
-      #echo {    ${link[cn]}（${link[long]}，${link[abbr]}）};
+      #local cn ${link[cn]};
+      #local long ${link[long]};
+      #local abbr ${link[abbr]};
+      #echo {    <g18>$cn（$long，$abbr）};
     };
   };
   #else {
-    #echo {<171>到不到当前位置}
+    #echo {<171>到不到当前位置};
   };
 };
 #alias goto_list {
@@ -131,7 +134,10 @@ ver：1.0
     #local num ${node[count]};
     #echo {<139>$cnt.$cn（$long，$abbr）连接节点：$num 个};
     #foreach ${node[links][%*]} {link} {
-      #echo {    ${link[cn]}（${link[long]}，${link[abbr]}）};
+      #local cn ${link[cn]};
+      #local long ${link[long]};
+      #local abbr ${link[abbr]};
+      #echo {    <g18>$cn（$long，$abbr）};
     };
   };
 };
@@ -173,7 +179,7 @@ ver：1.0
   #local pst_cn ${goto_route[$pst][cn]};
   #local dst_cn ${goto_route[$dst][cn]};
   #echo {<129>开始计算从[$pst_cn]到[$dst_cn]的路径};
-  #echo ...;
+  #echo {<G18>...};
   #nop 调用寻找节点函数;
   #var nodes {@find_node{$pst;$dst}};
   #nop 调用寻找路径函数;
