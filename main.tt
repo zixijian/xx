@@ -162,7 +162,7 @@
   w;
   n;
   e;
-  #showme {@bc1{福利领取完毕};};
+  #showme {@bc1{福利领取完毕}};
 };
 
 #nop 活动礼包;
@@ -173,10 +173,7 @@
   n;
   ne;
   ask zhenren about gift;
-  sw;
-  s;
-  e;
-  #showme {@bc1{礼包领取完毕};};
+  #showme {@bc1{礼包领取完毕}};
 };
 
 #nop ==常用别名==;
