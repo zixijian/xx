@@ -1,8 +1,0 @@
-#action {%!*bli bla%1} {
-  #showme %1;
-  #action {%%1bla bli%*} {
-    #showme %%1 %%2;
-  };
-};
-#show bla bla blo blb;
-#show bla bla bli bls;

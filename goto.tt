@@ -19,6 +19,9 @@ ver：1.0
 #nop 加载房间定位;
 #read gps.tt;
 
+#nop 加载遍历;
+#read bianli.tt;
+
 #nop 加载命令解析器;
 #read cmd.tt;
 

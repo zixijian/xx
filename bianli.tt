@@ -1,0 +1,45 @@
+#nop 遍历脚本;
+
+#class bianli open;
+
+#nop 捕捉房间信息，SENT OUTPUT唯一;
+
+#nop 过滤事件指令;
+#var exits_bl {{w|e|n|s|d|u|ne|nw|se|sw|up|down|enter|out|west|east|north|south|northeast|northwest|southeast|southwest|l|look|l %0|look %0}};
+
+#event {SENT OUTPUT} {
+  #format {exits_send} {%p} {%0};
+  #if {"${exits_send}" == "${exits_bl}"} {
+    #class tmp_bl open;
+    #nop 失败处理;
+    #action {{这个方向没有出路|挡住了你}} {
+      #echo {<171>移动失败...};
+      #class tmp_bl kill;
+    };
+    #nop 匹配房间信息;
+    #local rm_name {%* - \n{\s+\n|}};
+    #local rm_disc {%!s%a\n{\s}};
+    #local rm_wea  {\s+(.+)。|};
+    #local rm_mmap {%a};
+    #local rm_exits {%!s这里{唯一|明显}的{出口|方向}{有|是} %*。};
+    #local rm_obj {%a\Z};
+    #local rm_all {$rm_name$rm_disc{$rm_wea}$rm_mmap$rm_exits$rm_obj};
+    #line sub var #action {$rm_all}{
+      #echo {<172>捕捉成功...};
+      #echo {<174>当前房间：<176>%%1};
+      #nop #echo {<174>房间描述：<176>%%3};
+      #if {"%%5" != ""} {
+        #echo {<174>天气描述：<176>%%5};
+      }{#echo {<171>此处无法观察天气...}};
+      #nop #echo {<174>小地图：<176>%%7};
+      #local fm_exits {%%11};
+      #replace fm_exits {{\W+}} {\;};
+      #echo {<175>当前房间出口：<176>$fm_exits};
+      #nop #echo {<175>当前房间内物件：<176>%%12};
+      #class tmp_bl kill;
+    }{1};
+    #class tmp_bl close;
+  }
+};
+
+#class bianli close;

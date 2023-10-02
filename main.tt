@@ -12,12 +12,16 @@
 #nop 加载 MSLP 标签;
 #read mouse.tt;
 
+#nop 加载逍遥行;
+#read goto.tt;
+
 #nop 断线事件;
 #event {SESSION ACTIVATED} {
 	#if {"%0" == "gts"} {#read main.tt}
 };
 
 #nop 屏蔽连接提示;
+#event {GAG NO SESSION ACTIVE} {#0}
 #event {GAG SESSION ACTIVATED} {#0};
 #event {GAG SESSION CONNECTED} {#0};
 #event {GAG SESSION CREATED} {#0};
@@ -45,6 +49,8 @@
   #config mouse off;
   #class slide kill;
 };
+#nop 屏幕滑动;
+slide;
 
 #echo {%c%h} {light yellow};
 #echo {%c%h} {light green} {【请输入 xyj 指令连接至清华西游记】};
@@ -231,7 +237,9 @@
 #gag {^->%!*说道%!*$};
 #gag {往%*离开};
 #gag {走了过来};
-#gag {专心地研读};
+#gag {专心{地|}研读};
+#gag {把身上的%*卖掉。};
+#gag {向当铺买下%*。};
 #gag {卸除};
 #gag {放下};
 #gag {缓缓};
